@@ -5,6 +5,9 @@ class CommentCreate(BaseModel):
     content: str
     post_id: int
 
+class CommentUpdate(BaseModel):
+    content: str
+
 class CommentResponse(BaseModel):
     id: int
     content: str
