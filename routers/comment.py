@@ -8,8 +8,19 @@ from schemas.comment import CommentCreate, CommentUpdate, CommentResponse
 
 router = APIRouter(prefix="/comments", tags=["comments"])
 
+#response_model -> diz ao FastAPI qual schema usar para formatar a resposta
+
 @router.post("/", response_model=CommentResponse)
 def create_comment(comment: CommentCreate, user_id: int, db: Session = Depends(get_db)):
+    #comment: CommentCreate -> o FastAPI lê o corpo da requisição
+    #  e valida com o schema CommentCreate automaticamente
+
+    #db: Session = Depends(get_db) -> injeção de dependência.
+    #O FastAPI chama o get_db, abre a sessão, excuta ações e fecha
+    # no final da função
+
+    #user_id: Como ele não está no schema, o FastAPI vai esperá-lo como um query parameter
+
     user = db.query(User).filter(User.id == user_id).first()
     if not user:
         raise HTTPException(status_code=404, detail="User not found")

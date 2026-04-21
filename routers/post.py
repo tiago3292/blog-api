@@ -7,8 +7,18 @@ from schemas.post import PostCreate, PostResponse
 
 router = APIRouter(prefix="/posts", tags=["posts"])
 
+#response_model -> diz ao FastAPI qual schema usar para formatar a resposta
 @router.post("/", response_model=PostResponse)
 def create_post(post: PostCreate, author_id: int, db: Session = Depends(get_db)):
+    #user: UserCreate -> o FastAPI lê o corpo da requisição
+    #  e valida com o schema UserCreate automaticamente
+
+    #db: Session = Depends(get_db) -> injeção de dependência.
+    #O FastAPI chama o get_db, abre a sessão, excuta ações e fecha
+    # no final da função
+
+    #author_id: Como ele não está no schema, o FastAPI vai esperá-lo como um query parameter
+
     author = db.query(User).filter(User.id == author_id).first()
     if not author:
         raise HTTPException(status_code=404, detail="User not found")

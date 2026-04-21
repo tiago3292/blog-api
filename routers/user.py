@@ -6,8 +6,16 @@ from schemas.user import UserCreate, UserResponse
 
 router = APIRouter(prefix="/users", tags=["users"])
 
+#response_model -> diz ao FastAPI qual schema usar para formatar a resposta
 @router.post("/", response_model=UserResponse)
 def create_user(user: UserCreate, db: Session = Depends(get_db)):
+    #user: UserCreate -> o FastAPI lê o corpo da requisição
+    #  e valida com o schema UserCreate automaticamente
+
+    #db: Session = Depends(get_db) -> injeção de dependência.
+    #O FastAPI chama o get_db, abre a sessão, excuta ações e fecha
+    # no final da função
+
     user_exist = db.query(User).filter(User.email == user.email).first()
     if user_exist:
         raise HTTPException(status_code=400, detail="Email already registered")
@@ -20,7 +28,7 @@ def create_user(user: UserCreate, db: Session = Depends(get_db)):
     )
     db.add(new_user)
     db.commit()
-    db.refresh(new_user)
+    db.refresh(new_user)#Atualiza o objeto em memória. Sem ele, o id ainda seria None
     return new_user
 
 @router.get("/", response_model=list[UserResponse])
