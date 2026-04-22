@@ -1,4 +1,4 @@
-# services/
+# services
 
 Camada de serviços — lógica de negócio complexa que não pertence ao router.
 
