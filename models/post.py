@@ -17,11 +17,11 @@ class Post(Base):
         )
     #^ O lambda calcula a data no momento de cada inserção.
     #Sem ele, a data seria calculada apenas uma vez.
-    author_id: Mapped[int] = mapped_column(ForeignKey("users.id"), nullable=False)
+    author_id: Mapped[int] = mapped_column(ForeignKey("users.id", ondelete="CASCADE"), nullable=False)
     #^ Conecta o post ao autor. número precisa existir como id na tabela users
 
-    author: Mapped["User"] = relationship(back_populates="posts")
+    author: Mapped["User"] = relationship(back_populates="posts", passive_deletes=True)
     #^ Atalho do SLAlchemy para acessar o objeto User completo via post.author
     #back_populates conecta os dois lados da relação.
-    comments: Mapped[list["Comment"]] = relationship(back_populates="post")
+    comments: Mapped[list["Comment"]] = relationship(back_populates="post", passive_deletes=True)
     #^ mesma ideia, mas para todos os comentários de um post específico, via post.comments

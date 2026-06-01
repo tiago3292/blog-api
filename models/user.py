@@ -14,8 +14,8 @@ class User(Base):
     password: Mapped[str] = mapped_column(String(255), nullable=False)
     is_author: Mapped[bool] = mapped_column(Boolean, default=False)
 
-    posts: Mapped[list["Post"]] = relationship(back_populates="author")
+    posts: Mapped[list["Post"]] = relationship(back_populates="author", passive_deletes=True)
     #^ Atalho do SLAlchemy para acessar todos os posts de um usuário via user.posts
     #back_populates conecta os dois lados da relação.
-    comments: Mapped[list["Comment"]] = relationship(back_populates="user")
+    comments: Mapped[list["Comment"]] = relationship(back_populates="user", passive_deletes=True)
     #^ mesma ideia, mas para comentários, via user.comments
